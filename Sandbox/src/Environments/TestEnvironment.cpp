@@ -10,7 +10,7 @@ TestEnvironment::TestEnvironment()
 
 
 
-	m_Ocean.Generate(256, 10, 5, glm::vec2(3.01, 1.01), 2);
+	m_Ocean.Generate(256, 50, 1, glm::vec2(9.01, 4.01), 6);
 	c_Emissive = m_Ocean.GetColorVec4(0);
 	c_Ambient = m_Ocean.GetColorVec4(1);
 	c_Diffuse = m_Ocean.GetColorVec4(2);
