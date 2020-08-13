@@ -88,7 +88,7 @@ namespace Hazel
 
 	void Quaternion::convertToUnitNormQuaternion()
 	{
-		float angle = s * 2 * M_PI / 306;
+		float angle = s * 2.0 * M_PI / 360.0;
 		v = glm::normalize(v);
 		s = cosf(angle * 0.5);
 		v = v * sinf(angle * 0.5);
@@ -121,6 +121,19 @@ namespace Hazel
 		Quaternion qInverse = q.inverse();
 		Quaternion rotatedVector = q * p * qInverse;
 		return rotatedVector.v;
+	}
+
+	glm::mat3 Quaternion::toMatrix()
+	{
+		normalize();
+		float x = v[0];
+		float x2 = x * x;
+		float y = v[1];
+		float y2 = y * y;
+		float z = v[2];
+		float z2 = z * z;
+		return glm::mat3(1 - 2 * y2 - 2 * z2, 2 * x * y + 2 * s * z, 2 * x * z - 2 * s * y, 2 * x * y - 2 * s * z, 1 - 2 * x2 - 2 * z2, 2 * y * z + 2 * s * x, 2 * x * z + 2 * s * y, 2 * y * z - 2 * s * x, 1 - 2 * x2 - 2 * y2);
+
 	}
 
 }

@@ -9,6 +9,7 @@
 #include "Hazel/Entity/Model.h"
 
 #include "Hazel/Ocean/WaterPhysicsEngine.h"
+#include "Hazel/Entity/RigidBody.h"
 
 namespace Hazel
 {
@@ -29,26 +30,20 @@ namespace Hazel
 		void Steer(bool ccw);
 		void OnUpdate(Timestep ts, WaterPhysicsEngine& WPE);
 
-		glm::vec3 GetPosition() { return m_Position; }
+		
 		glm::vec2 GetDirection() { return m_Direction; }
-		float GetVelocity() { return m_Velocity; }
-
-		void SetVelocity(float velocity) { m_Velocity = velocity; }
-
+		glm::mat4 GetTranform() { return m_Transform; }
 	private:
 		// rendering
 		Ref<Hazel::Model> m_Model;
 		Ref<Hazel::Shader> m_Shader;
 		// vars
-		glm::mat4 m_Transform = glm::mat4(1.0);
-		// gamevars
-		// 2020 06 29
-		glm::vec3 m_Position = { 0.0, 0.0, 0.0 };		// P
-		float m_Velocity = 0.0;							// V
-		float m_VelocityVertical = 0.0;					// V_y
-		glm::vec3 m_AngularMomentum = { 0.0, 0.0, 0.0 };// L
-		float m_Weight = 9 * 10;							// m
-
+		glm::mat3 I = glm::mat3(15.2416, 0.0000, -0.0000, 0.0000, 21.2211, -0.0000, -0.0000, -0.0000, 15.2416);
+		float M = 28.8000;
+		RigidBody rb = RigidBody(I, M);
+		glm::mat4 m_Transform = glm::translate(glm::mat4(rb.R), rb.x);
+		// Boat will have a RigidBody object
+		
 
 		// old
 		glm::vec3 m_Direction = { 0.0, 0.0, 1.0 };		// Direction
@@ -58,10 +53,6 @@ namespace Hazel
 		float m_Maneuverability = 2.5;					// Maneuverability
 		
 
-		Floater* m_Floaters;
-		int m_nFloaters;
-
-		void SetFloaters();
 	};
 
 	class BoatController

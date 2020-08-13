@@ -30,6 +30,7 @@ namespace Hazel {
 		void UploadUniformInt(const std::string name, int value);
 
 		void UploadUniformMat4(const std::string name, const glm::mat4& matrix);
+		void UploadUniformMat3(const std::string name, const glm::mat3& matrix);
 
 	private:
 		std::string ReadFile(const std::string& filepath);

@@ -14,7 +14,7 @@ namespace Hazel
 	public:
 		Quaternion();
 		Quaternion(float _s, glm::vec3 _v);
-		~Quaternion();
+		
 		void operator+=(const Quaternion& q);
 		Quaternion operator+(const Quaternion& q) const;
 		void operator-=(const Quaternion& q);
@@ -29,7 +29,8 @@ namespace Hazel
 		void convertToUnitNormQuaternion();
 		Quaternion conjugate();
 		Quaternion inverse();
-		glm::vec3 Quaternion::rotateVectorAboutAngleAndAxis(glm::vec3 vector, float uAngle, glm::vec3& uAxis);
+		glm::vec3 rotateVectorAboutAngleAndAxis(glm::vec3 vector, float uAngle, glm::vec3& uAxis);
+		glm::mat3 toMatrix();
 	};
 
 

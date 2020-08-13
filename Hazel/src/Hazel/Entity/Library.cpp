@@ -17,7 +17,6 @@ namespace Hazel
 		{
 			Ref<Model> newModel = std::make_shared<Model>(Model::Model(filepath, texture_filepath));
 			m_ModelLibrary.Add(filepath, newModel);
-			HZ_CORE_INFO("return new model");
 			return newModel;
 			
 		}

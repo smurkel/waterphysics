@@ -22,7 +22,8 @@ namespace Hazel {
 	};
 	struct PhysicsProbe
 	{
-		float x, y, z;
+		glm::vec4 XYZd;
+		glm::vec4 NxNyNzV;
 	};
 	class Model
 	{

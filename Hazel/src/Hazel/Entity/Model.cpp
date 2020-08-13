@@ -18,7 +18,7 @@ namespace Hazel {
 		std::vector< glm::vec3 > _vertices;
 		std::vector< glm::vec3 > _normals;
 		std::vector<glm::vec2> _uvs;
-		std::vector<glm::vec3> _physics_probes;
+		std::vector<PhysicsProbe> _physics_probes;
 		std::vector< FaceIndex > _indices;
 
 
@@ -63,12 +63,12 @@ namespace Hazel {
 				fscanf(file, "%f %f\n", &uv.x, &uv.y);
 				_uvs.push_back(uv);
 			}
-
-			if (strcmp(lineHeader, "p") == 0)
+			// floaters / physics probes
+			if (strcmp(lineHeader, "fl") == 0)
 			{
-				glm::vec3 probe;
-				fscanf(file, "%f %f %f\n", &probe.x, &probe.y, &probe.z);
-				_physics_probes.push_back(probe);
+				PhysicsProbe temp;
+				fscanf(file, "%f %f %f %f %f %f %f %f\n", &temp.XYZd.x, &temp.XYZd.y, &temp.XYZd.z, &temp.XYZd.w, &temp.NxNyNzV.x, &temp.NxNyNzV.y, &temp.NxNyNzV.z, &temp.NxNyNzV.w);
+				_physics_probes.push_back(temp);
 			}
 			// face
 			else if (strcmp(lineHeader, "f") == 0)
@@ -107,9 +107,7 @@ namespace Hazel {
 		m_Probes = new PhysicsProbe[m_ProbeCount];
 		for (int p = 0;p < m_ProbeCount;p++)
 		{
-			m_Probes[p].x = _physics_probes[p].x;
-			m_Probes[p].y = _physics_probes[p].y;
-			m_Probes[p].z = _physics_probes[p].z;
+			m_Probes[p] = _physics_probes[p];
 		}
 
 		m_VA.reset(Hazel::VertexArray::Create());

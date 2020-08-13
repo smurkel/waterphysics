@@ -47,17 +47,17 @@ void main()
 
 	
 	gl_Position = u_ViewMatrix * gl_in[0].gl_Position;	
-	Fog = pow(length(V1)/40.0, 2);
+	Fog = pow(length(V1)/30.0, 2);
 	gl_Position = u_ProjectionMatrix * gl_Position;
 	EmitVertex();
 
 	gl_Position = u_ViewMatrix * gl_in[1].gl_Position;	
-	Fog = pow(length(V2)/40.0, 2);
+	Fog = pow(length(V2)/30.0, 2);
 	gl_Position = u_ProjectionMatrix * gl_Position;
 	EmitVertex();
 
 	gl_Position = u_ViewMatrix * gl_in[2].gl_Position;	
-	Fog = pow(length(V3)/40.0, 2);
+	Fog = pow(length(V3)/30.0, 2);
 	gl_Position = u_ProjectionMatrix * gl_Position;
 	EmitVertex();
 
@@ -89,16 +89,16 @@ void main (void)
 	fragColor = C_Ambient * F_Ambient +
 				C_Diffuse * F_Diffuse * max(Reflection, 0) +
 				(Facing ?
-					C_Specular * F_Specular * pow(Reflection,20) :
+					C_Specular * F_Specular * pow(Reflection,120) :
 					vec4(0.0, 0.0, 0.0, 0.0)) +
 				(Right ?
 					C_Emissive * F_Emissive * pow(Righton, 2) :
 					vec4(0.0, 0.0, 0.0, 0.0));
 
-	fragColor.a = 1;
-//	if (Fog > 0.5)
-//	{
-//		float fog = Fog - 0.5;
-//		fragColor = (1 - fog) * fragColor + fog * vec4(1,1,1,1);
-//	}
+	fragColor.a = 1.0;
+	if (Fog > 0.5)
+	{
+		float fog = Fog - 0.5;
+		fragColor = (1 - fog) * fragColor + fog * vec4(1.0, 1.0, 1.0, 1.0);
+	}
 }

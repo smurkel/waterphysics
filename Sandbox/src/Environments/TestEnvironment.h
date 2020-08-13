@@ -16,6 +16,7 @@ public:
 	virtual void OnImGuiRender() override;
 	void OnEvent(Hazel::Event& e) override;
 private:
+	bool Running = false;
 	bool OnKeyPressed(Hazel::KeyPressedEvent& e);
 	Hazel::CameraController m_CameraController;
 	Hazel::Ocean m_Ocean;

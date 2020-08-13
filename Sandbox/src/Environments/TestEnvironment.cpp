@@ -4,13 +4,13 @@
 TestEnvironment::TestEnvironment()
 	: Layer("Test layer"), m_CameraController()
 {
-	//m_Boat.SetShader(m_Library.GetShader("assets/shaders/DefaultPolyShader.glsl"));
-	//m_Boat.SetModel(m_Library.GetModel("assets/models/Rowboat.obj", "assets/textures/Palettes.png"));
-	//m_BoatController.SetBoat(m_Boat);
+	m_Boat.SetShader(m_Library.GetShader("assets/shaders/DefaultPolyShader.glsl"));
+	m_Boat.SetModel(m_Library.GetModel("assets/models/BuoyValid.obj", "assets/textures/Palettes.png"));
+	m_BoatController.SetBoat(m_Boat);
 
 
 
-	m_Ocean.Generate(256, 50, 1, glm::vec2(9.01, 4.01), 6);
+	m_Ocean.Generate(256, 100, 1, glm::vec2(9.01, 4.01), 6);
 	c_Emissive = m_Ocean.GetColorVec4(0);
 	c_Ambient = m_Ocean.GetColorVec4(1);
 	c_Diffuse = m_Ocean.GetColorVec4(2);
@@ -22,23 +22,25 @@ TestEnvironment::TestEnvironment()
 
 void TestEnvironment::OnUpdate(Hazel::Timestep ts)
 {
-	Hazel::RenderCommand::SetClearColor(glm::vec4(1, 1, 1, 1));
+	Hazel::RenderCommand::SetClearColor(glm::vec4(1.0, 1.0, 1.0, 1.0));
 	Hazel::RenderCommand::Clear();
-
 	m_Ocean.SetColorVec4(0, c_Emissive);
 	m_Ocean.SetColorVec4(1, c_Ambient);
 	m_Ocean.SetColorVec4(2, c_Diffuse);
 	m_Ocean.SetColorVec4(3, c_Specular);
-
-	Hazel::Renderer::BeginScene(m_CameraController.GetCamera(), m_Ocean.GetSunPos());
 	m_Ocean.Update(ts);
-	m_Ocean.Render(m_CameraController.GetCamera());
-
-	m_CameraController.OnUpdate(ts);
+	m_Boat.OnUpdate(ts, m_WPE);
 	//m_CameraController.SetFocus(m_Boat.GetPosition());
+	
+	/*glm::mat4 boatTransform = m_Boat.GetTranform();
+	glm::vec4 boatLightPos = glm::vec4(0.0, 2.0, 0.0, 0.0);
+	glm::vec4 SunPos = boatTransform * boatLightPos;
+	m_Ocean.SetSunPos(glm::vec3(SunPos));*/
+	Hazel::Renderer::BeginScene(m_CameraController.GetCamera(), m_Ocean.GetSunPos());
 
-	//m_Boat.OnUpdate(ts, m_WPE);
-	//m_Boat.Render();
+	m_Ocean.Render(m_CameraController.GetCamera());
+	m_CameraController.OnUpdate(ts);
+	m_Boat.Render();
 	Hazel::Renderer::EndScene();
 
 }
@@ -73,16 +75,15 @@ bool TestEnvironment::OnKeyPressed(Hazel::KeyPressedEvent& e)
 	if (e.GetKeyCode() == HZ_KEY_L) wind.y = wind.y + 1;
 	m_Ocean.SetWind(wind);
 	
-	HZ_CORE_INFO("Wind: ({0}, {1})", m_Ocean.GetWind().x, m_Ocean.GetWind().y);
+	//HZ_CORE_INFO("Wind: ({0}, {1})", m_Ocean.GetWind().x, m_Ocean.GetWind().y);
 
 	float amp = m_Ocean.GetAmplitude();
 	if (e.GetKeyCode() == HZ_KEY_Q) amp += 0.25;
 	if (e.GetKeyCode() == HZ_KEY_E) amp -= 0.25;
-
 	if (e.GetKeyCode() == HZ_KEY_SPACE) m_Ocean.InvDynamic();
 
 	m_Ocean.SetAmplitude(amp);
-	HZ_CORE_INFO("Amplitude = {0}", m_Ocean.GetAmplitude());
+	//HZ_CORE_INFO("Amplitude = {0}", m_Ocean.GetAmplitude());
 
 	m_Ocean.UpdateSpectrum();
 	return true;

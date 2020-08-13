@@ -14,7 +14,7 @@ uniform vec3 u_ViewPosition;
 out vec2 textureCoordinates;
 out float illumination;
 out float reflection;
-
+//out float Brightness;
 void main() 
 {
 	gl_Position = u_ProjectionMatrix * u_ViewMatrix * u_Transform * vec4(Position, 1.0);
@@ -23,7 +23,7 @@ void main()
 	illumination = dot(Normal, normalize(u_LightPosition - Position));
 	// Diffuse lightning
 	reflection = dot(normalize(reflect(Position - u_LightPosition, Normal)), normalize(u_ViewPosition - Position));
-
+	//Brightness = 1 / pow(length(u_LightPosition - Position),2);
 }
 
 #type fragment
@@ -34,12 +34,13 @@ layout(location = 0) out vec4 fragColor;
 in vec2 textureCoordinates;
 in float illumination;
 in float reflection;
-
+in float Brightness;
 uniform sampler2D u_Texture; 
 
 void main (void) 
 {	
-	float brightness = 0.5 + 0.5 * max(illumination, 0) + 0.5 * max(reflection, 0);
-	fragColor = texture(u_Texture, textureCoordinates) * brightness;
+	float Luminance = 0.2 + 0.5 * max(illumination, 0) + 0.5 * max(reflection, 0);
+	
+	fragColor = texture(u_Texture, textureCoordinates) * Luminance;
 	fragColor.a = 1;
 }

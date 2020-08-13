@@ -3,24 +3,25 @@
 #include "Ocean.h"
 #include "Platform/OpenGL/OpenGLShader.h"
 
+#include "Hazel/Entity/Model.h"
+#include "Hazel/Entity/RigidBody.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include "Hazel/Renderer/Shader.h"
 
 namespace Hazel
 {
-
-	struct Floater
+	struct PhysicsProbeOutput
 	{
-		float x, y, z, w;
+		glm::vec3 torque;
+		glm::vec3 force;
 	};
-
 	class WaterPhysicsEngine
 	{
 	public:
 		WaterPhysicsEngine();
 
-		glm::vec4 FloatingObjectTorque(Floater* floaters, int nfloaters, glm::mat4& transform);
+		PhysicsProbeOutput FloatingObjectTorque(PhysicsProbe* floaters, int nfloaters, glm::mat4& transform, RigidBody& rb);
 
 		void SetOcean(Ocean* ocean) { m_Ocean = ocean; _x = ocean->GetDisplacementMap(0); _y = ocean->GetDisplacementMap(1); _z = ocean->GetDisplacementMap(2); }
 	private:

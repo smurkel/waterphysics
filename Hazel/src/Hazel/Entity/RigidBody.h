@@ -1,31 +1,35 @@
 #pragma once
+
 #include <glm/gtc/type_ptr.hpp>
-#include "Hazel/Entity/Model.h"
+#include "Hazel/Math/Quaternion.h"
+
 
 namespace Hazel
 {
-
 	class RigidBody
 	// Physics implementation only! Leave rendering and such to the owner.
 	{
 	public:
-		RigidBody(PhysicsProbe* probes, float n_probes) { m_Probes = probes; m_ProbeCount = n_probes; }
-
-		void CalculateMomentOfInertia();
-
+		RigidBody(glm::mat3 Ibody, float mass);
+		void Update(glm::vec3 force, glm::vec3 torque, float dt);
+		glm::vec3 GetPosition() { return x; }
+		glm::mat3 GetOrientation() { return R; }
+	private:
+		glm::mat3 Cross(glm::vec3 v);
 	public:
-		// point-particle
-		glm::vec3	P	= { 0.0, 0.0, 0.0 };	// center of mass position
-		glm::vec3	V	= { 0.0, 0.0, 0.0 };	// center of mass velocity
-		float		m	= 0;					// total mass
+		// State parameters
+		glm::vec3	x = { 0.0, 0.0, 0.0 };	// Point position
+		glm::vec3	P = { 0.0, 0.0, 0.0 };	// Linear momentum
+		glm::mat3	R = glm::mat3(1.0f);	// Orientation
+		Quaternion q = Quaternion(1, glm::vec3(0, 0, 0));
+		glm::vec3	L = glm::vec3(0.0f);	// Angular momentum
+		float		m;						// Mass
+		glm::mat3	I;						// Inverse of moment of inertia matrix in body coordinates
+		// External & auxiliary
+		glm::mat3 _I = glm::mat3(1.0f);
+		glm::vec3 w = glm::vec3(0.0f);
 
-		// rigid-body
-		glm::vec3	w	= { 0.0, 0.0, 0.0 };	// angular velocity
-		glm::mat3	I	= glm::mat3(1.0);		// moment of inertia
-
-		// bookkeeping
-		PhysicsProbe*	m_Probes;
-		float			m_ProbeCount;
+		
 	};
 
 }
